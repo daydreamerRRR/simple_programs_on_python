@@ -1,10 +1,13 @@
+# библиотека, необходимая в том случае, если пользователь решил тренировать случайные системы счисления. 
 import random
 from random import *
 
+# библиотека, необходимая для подкраски слов "Верно"/"Неверно", когда пользователь ввёл ответ.
 import colorama
 from colorama import Fore
 colorama.init()
 
+# функция изменяет форму слова "число" в зависимости от того, сколько чисел было отгадано.
 def count_of_guessed(count_of_guessed_temp):
     if count_of_guessed_temp % 10 == 1 and (count_of_guessed_temp % 100 < 5 or count_of_guessed_temp % 100 > 20):
         print(f'Вы правильно высчитали {count_of_guessed_temp} число!')
@@ -13,6 +16,10 @@ def count_of_guessed(count_of_guessed_temp):
     else:
         print(f'Вы правильно высчитали {count_of_guessed_temp} чисел!')
 
+
+# функция, которая проверяет, вводит ли пользователь корректные значение, когда это от него требуется.
+# если было введено неправильное значение (все возможные значения находятся в списке values), то сообщается об ошибке,
+# указываются возможные значения, после чего следует приглашение к вводу.
 def fool_check(user_command_temp, values):
     while user_command_temp.lower() not in values:
         print('Некорректный ввод. Введите ', end='')
@@ -26,6 +33,8 @@ def fool_check(user_command_temp, values):
         user_command_temp = input()
     return user_command_temp.lower()
 
+
+# очень специфическая функция, которая проверяет, ввёл ли пользователь ПОЛОЖИТЕЛЬНОЕ ЧИСЛО на этапе ответа.
 def digit_check(user_command_temp):
     while not user_command_temp.isdigit() or int(user_command_temp) <= 0:
         print('Некорректный ввод. Введите число больше 0.')
@@ -33,42 +42,49 @@ def digit_check(user_command_temp):
     user_command_temp = int(user_command_temp)
     return user_command_temp
 
-print("Привет!")
-print('Это программа-тренировка для быстрого перевода чисел из 2, 8 и 16 систем счисления в 10')
-user_command = fool_check(input('Начать тренировку? да/нет\n'), ['да', 'нет'])
-if user_command == 'да':
-    print('Введите систему счисления для тренировки (2, 8, 16, rand):')
-    numeral_system = fool_check(input(), ['2', '8', '16', 'rand'])
-    print('Введите диапазон чисел для перевода в выбранную систему счисления:')
-    print('«1». от 10 до 100 (не включительно)')
-    print('«2». от 100 до 1000 (не включительно)')
-    diapason = int(fool_check(input(), ['1', '2']))
-    guessed_counter = 0
-    while user_command == 'да':
-        numeral_temp = numeral_system
-        guessing_num = randint(10**diapason, 10**(diapason+1))
-        if numeral_system == 'rand':
-            numeral_system = choice(['2', '8', '16'])
-        if numeral_system == '2':
-            print(bin(guessing_num)[2:] + '₂')
-        elif numeral_system == '8':
-            print(oct(guessing_num)[2:] + '₈')
-        elif numeral_system == '16':
-            print(hex(guessing_num)[2:].upper() + '₁₆')
-        numeral_system = numeral_temp
-        print('Введите ответ:')
-        user_command = digit_check(input())
-        if user_command == guessing_num:
-            print(Fore.GREEN + 'Верно!' + Fore.RESET)
-            guessed_counter += 1
-        else:
-            print(Fore.RED + 'Неверно!' + Fore.RESET)
-            print(Fore.LIGHTBLUE_EX + 'Правильный ответ ' + Fore.RESET + '— '+ str(guessing_num))
-        count_of_guessed(guessed_counter)
-        print('Хотите сыграть ещё один раунд?')
-        user_command = fool_check(input(), ['да', 'нет'])
-print('До встречи!')
-input()
+
+# основная функция программы.
+def main():
+    print("Привет!")
+    print('Это программа-тренировка для быстрого перевода чисел из 2, 8 и 16 систем счисления в 10')
+    user_command = fool_check(input('Начать тренировку? да/нет\n'), ['да', 'нет'])
+    if user_command == 'да':
+        print('Введите систему счисления для тренировки (2, 8, 16, rand):')
+        numeral_system = fool_check(input(), ['2', '8', '16', 'rand'])
+        print('Введите диапазон чисел для перевода в выбранную систему счисления:')
+        print('«1». от 10 до 100 (не включительно)')
+        print('«2». от 100 до 1000 (не включительно)')
+        diapason = int(fool_check(input(), ['1', '2']))
+        guessed_counter = 0
+        while user_command == 'да':
+            numeral_temp = numeral_system
+            guessing_num = randint(10**diapason, 10**(diapason+1))
+            if numeral_system == 'rand':
+                numeral_system = choice(['2', '8', '16'])
+            if numeral_system == '2':
+                print(bin(guessing_num)[2:] + '₂')
+            elif numeral_system == '8':
+                print(oct(guessing_num)[2:] + '₈')
+            elif numeral_system == '16':
+                print(hex(guessing_num)[2:].upper() + '₁₆')
+            numeral_system = numeral_temp
+            print('Введите ответ:')
+            user_command = digit_check(input())
+            if user_command == guessing_num:
+                print(Fore.GREEN + 'Верно!' + Fore.RESET)
+                guessed_counter += 1
+            else:
+                print(Fore.RED + 'Неверно!' + Fore.RESET)
+                print(Fore.LIGHTBLUE_EX + 'Правильный ответ ' + Fore.RESET + '— '+ str(guessing_num))
+            count_of_guessed(guessed_counter)
+            print('Хотите сыграть ещё один раунд?')
+            user_command = fool_check(input(), ['да', 'нет'])
+    print('До встречи!')
+    input()
+    
+if __name__ == '__main__':
+    main()
+    
 '''
 Описание работы программы:
 1. Пользователю предлагается выбрать основание системы счисления,
@@ -95,8 +111,8 @@ input()
  - ✔ Сделать перевод разных чисел из заданного диапазона в случайную (2, 8, 16) систему счисления.
  - Добавить счётчик очков. В зависимости от того, что выбрал пользователь в шаге (1),
    за правильное «угадывание» выдаётся разное количество очков:
-   - из 2 в 10 -- 10 очков
+   - из 2 в 10 -- 50 очков
    - из 8 в 10 -- 20 очков
-   - из 16 в 10 -- 50 очков
+   - из 16 в 10 -- 10 очков
    - в случае ошибки у пользователя отнимается 30 очков.
 '''
