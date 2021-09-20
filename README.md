@@ -1,5 +1,5 @@
 # simple_programs_on_python
-A pack of simple programs on Python. They are easy to write, but they are anyway may be good demonstration of code-style.
+A pack of simple programs on Python. They are very easy to write, but they are anyway may be good demonstration of code-style.
 ## password generator
 First simple program that generates password by a list of parameters, like:
 - amount of passwords
